@@ -1,0 +1,44 @@
+version: '3'
+
+#aqui ficam as redes que tens
+networks:
+  net1:
+    ipam:
+      config:
+      #aqui configuras a subnet que queres
+      - subnet: 172.30.0.0/16
+#se precisar de mais redes é só dares copy paste, tens é de mudar o número à frente net
+#networks:
+#  net1:
+#    ipam:
+#      config:
+#      #aqui configuras a subnet que queres
+#      - subnet: 172.30.0.0/16
+
+services:
+#container 1
+  ubuntu:
+    #se o professor quiser que este container só levante caso outro apagas o # da linha abaixo
+    depends_on:
+      - db #aqui o db pode ser qualquer coisa, tem é de ter o nome do serviço que queres (meti db porque é o que usei no exemplo(está abaixo de network))
+  #se o professor quiser image deixas como tá e mudas a imagem, se ele pedir build fazes como está no exemplo do db
+    image: ubuntu:latest
+    #portas, porta à esquerda é a porta do teu pc, porta à direita é da máquina
+    ports:
+      - 8000:80
+    #nome do container #andaburro
+    container_name: ubuntu
+    #equivalente ao -it no docker exec
+    tty: true
+    #redes que estás a usar
+    networks:
+      - net1
+  db:
+    build: ./teste
+    ports:
+      - 5000:5000
+    container_name: mariadb
+    tty: true
+    networks:
+      - net1
+
